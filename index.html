@@ -1,9 +1,29 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-mode="day" data-palette="default">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Hotkeys</title>
+    <script>
+      // Sets the theme before first paint, so there's no flash of the wrong
+      // mode. Storage key/shape must match src/hooks/useHotkeysState.ts.
+      (function () {
+        try {
+          var raw = localStorage.getItem('hotkeys-view_state_v1');
+          var s = raw ? JSON.parse(raw) : {};
+          var mode = s.themeMode || 'system';
+          var palette = s.palette || 'default';
+          var resolved =
+            mode === 'system'
+              ? window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'night'
+                : 'day'
+              : mode;
+          document.documentElement.dataset.mode = resolved;
+          document.documentElement.dataset.palette = palette;
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

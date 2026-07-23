@@ -1,14 +1,16 @@
 import { useMemo } from 'react';
 import { TOOLS } from './data/hotkeys';
 import { useHotkeysState } from './hooks/useHotkeysState';
+import { useTheme } from './hooks/useTheme';
 import { buildToolView, budgetFor } from './lib/rank';
 import { ToolTabs } from './components/ToolTabs';
 import { ToolPanel } from './components/ToolPanel';
-
-const SHOW_STARS = true;
+import { SettingsPanel } from './components/SettingsPanel';
 
 export function App() {
-  const { state, toggleTool, toggleFavGroup, toggleFavKey } = useHotkeysState();
+  const { state, toggleTool, toggleFavGroup, toggleFavKey, setShowStars, setThemeMode, setPalette } =
+    useHotkeysState();
+  useTheme(state.themeMode, state.palette);
 
   const activeTools = useMemo(
     () => TOOLS.filter((t) => state.enabled.includes(t.id)),
@@ -23,16 +25,20 @@ export function App() {
     [activeTools, state.favGroups, state.favKeys, limited, budget],
   );
 
-  const modeLabel =
-    n === 0 ? 'Enable a tool below' : n === 1 ? 'Full reference' : `${n} tools · essentials, starred first`;
-
   return (
     <div className="app">
       <header className="app-header">
         <span className="app-title">Hotkeys</span>
         <div className="app-header__row">
           <ToolTabs tools={TOOLS} enabled={state.enabled} onToggle={toggleTool} />
-          <span className="app-mode">{modeLabel}</span>
+          <SettingsPanel
+            themeMode={state.themeMode}
+            palette={state.palette}
+            showStars={state.showStars}
+            onThemeModeChange={setThemeMode}
+            onPaletteChange={setPalette}
+            onShowStarsChange={setShowStars}
+          />
         </div>
       </header>
 
@@ -50,7 +56,7 @@ export function App() {
               key={view.tool.id}
               view={view}
               limited={limited}
-              showStars={SHOW_STARS}
+              showStars={state.showStars}
               onFavGroup={toggleFavGroup}
               onFavKey={toggleFavKey}
             />

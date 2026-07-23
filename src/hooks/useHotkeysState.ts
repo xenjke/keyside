@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { PersistedState } from '../types';
+import type { Palette, PersistedState, ThemeMode } from '../types';
 
-const STORAGE_KEY = 'hotkeys-view_state_v1';
+// Also hard-coded in index.html's pre-paint theme script — keep the two in sync.
+export const STORAGE_KEY = 'hotkeys-view_state_v1';
 
 const DEFAULT_STATE: PersistedState = {
   enabled: ['nvim'],
   favGroups: {},
   favKeys: {},
+  showStars: true,
+  themeMode: 'system',
+  palette: 'default',
 };
 
 function load(): PersistedState {
@@ -18,6 +22,9 @@ function load(): PersistedState {
       enabled: Array.isArray(parsed.enabled) ? parsed.enabled : DEFAULT_STATE.enabled,
       favGroups: parsed.favGroups ?? {},
       favKeys: parsed.favKeys ?? {},
+      showStars: typeof parsed.showStars === 'boolean' ? parsed.showStars : DEFAULT_STATE.showStars,
+      themeMode: parsed.themeMode ?? DEFAULT_STATE.themeMode,
+      palette: parsed.palette ?? DEFAULT_STATE.palette,
     };
   } catch {
     return DEFAULT_STATE;
@@ -60,5 +67,17 @@ export function useHotkeysState() {
     });
   }, []);
 
-  return { state, toggleTool, toggleFavGroup, toggleFavKey };
+  const setShowStars = useCallback((showStars: boolean) => {
+    setState((s) => ({ ...s, showStars }));
+  }, []);
+
+  const setThemeMode = useCallback((themeMode: ThemeMode) => {
+    setState((s) => ({ ...s, themeMode }));
+  }, []);
+
+  const setPalette = useCallback((palette: Palette) => {
+    setState((s) => ({ ...s, palette }));
+  }, []);
+
+  return { state, toggleTool, toggleFavGroup, toggleFavKey, setShowStars, setThemeMode, setPalette };
 }

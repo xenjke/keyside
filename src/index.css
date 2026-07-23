@@ -1,15 +1,5 @@
 :root {
-  --color-bg: #faf9f5;
-  --color-surface: #eae9e9;
-  --color-text: #201e1d;
-  --color-accent: #0088b0;
-  --color-accent-2: #d6006c;
   --color-divider: color-mix(in srgb, var(--color-text) 16%, transparent);
-
-  --color-accent-100: #e9f8ff;
-  --color-accent-800: #004961;
-  --color-accent-2-100: #fff1f4;
-  --color-accent-2-800: #790e3d;
 
   --font-heading: Georgia, 'Iowan Old Style', 'Source Serif 4', serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -26,16 +16,92 @@
   --key-col-width: 128px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #1c1b1a;
-    --color-surface: #262524;
-    --color-text: #f0eeec;
-    --color-accent-100: #0a303e;
-    --color-accent-800: #99e0ff;
-    --color-accent-2-100: #4b1528;
-    --color-accent-2-800: #ffc0d0;
-  }
+/* — Palettes — each is a full set of color tokens for one palette × mode.
+   Applied via data-palette/data-mode on <html>, set by src/hooks/useTheme.ts
+   (and, before first paint, the inline script in index.html). */
+
+:root[data-palette='default'][data-mode='day'] {
+  --color-bg: #faf9f5;
+  --color-surface: #eae9e9;
+  --color-text: #201e1d;
+  --color-accent: #0088b0;
+  --color-accent-2: #d6006c;
+  --color-accent-100: #e9f8ff;
+  --color-accent-800: #004961;
+  --color-accent-2-100: #fff1f4;
+  --color-accent-2-800: #790e3d;
+}
+
+:root[data-palette='default'][data-mode='night'] {
+  --color-bg: #1c1b1a;
+  --color-surface: #262524;
+  --color-text: #f0eeec;
+  --color-accent: #0088b0;
+  --color-accent-2: #d6006c;
+  --color-accent-100: #0a303e;
+  --color-accent-800: #99e0ff;
+  --color-accent-2-100: #4b1528;
+  --color-accent-2-800: #ffc0d0;
+}
+
+:root[data-palette='catppuccin'][data-mode='day'] {
+  /* Catppuccin Latte */
+  --color-bg: #eff1f5;
+  --color-surface: #e6e9ef;
+  --color-text: #4c4f69;
+  --color-accent: #1e66f5;
+  --color-accent-2: #ea76cb;
+  --color-accent-100: #dbe9ff;
+  --color-accent-800: #113d8f;
+  --color-accent-2-100: #fbe1f3;
+  --color-accent-2-800: #8a2568;
+}
+
+:root[data-palette='catppuccin'][data-mode='night'] {
+  /* Catppuccin Mocha */
+  --color-bg: #1e1e2e;
+  --color-surface: #313244;
+  --color-text: #cdd6f4;
+  --color-accent: #89b4fa;
+  --color-accent-2: #f5c2e7;
+  --color-accent-100: #1e3a5f;
+  --color-accent-800: #cfe3ff;
+  --color-accent-2-100: #4a2f42;
+  --color-accent-2-800: #f7d8ec;
+}
+
+:root[data-palette='github'][data-mode='day'] {
+  /* GitHub Light */
+  --color-bg: #ffffff;
+  --color-surface: #f6f8fa;
+  --color-text: #1f2328;
+  --color-accent: #0969da;
+  --color-accent-2: #bf3989;
+  --color-accent-100: #ddf4ff;
+  --color-accent-800: #0550ae;
+  --color-accent-2-100: #ffeff7;
+  --color-accent-2-800: #8a1861;
+}
+
+:root[data-palette='github'][data-mode='night'] {
+  /* GitHub Dark */
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-text: #e6edf3;
+  --color-accent: #2f81f7;
+  --color-accent-2: #db61a2;
+  --color-accent-100: #0c2d6b;
+  --color-accent-800: #a5d6ff;
+  --color-accent-2-100: #4a1935;
+  --color-accent-2-800: #ffb3d9;
+}
+
+:root[data-mode='day'] {
+  color-scheme: light;
+}
+
+:root[data-mode='night'] {
+  color-scheme: dark;
 }
 
 * {
@@ -97,14 +163,6 @@ button {
   margin-top: 6px;
   border-bottom: 1px solid var(--color-divider);
   flex-wrap: wrap;
-}
-
-.app-mode {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-text) 48%, transparent);
-  white-space: nowrap;
 }
 
 .tool-tabs {
@@ -383,4 +441,95 @@ button {
   .tool-panel__body--columns {
     column-width: 100%;
   }
+}
+
+/* — settings gear + panel — */
+.settings {
+  position: relative;
+  flex: none;
+}
+
+.settings__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  opacity: 0.55;
+}
+
+.settings__trigger:hover,
+.settings__trigger[aria-expanded='true'] {
+  opacity: 1;
+  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.settings__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--color-text) 20%, transparent);
+}
+
+.settings__section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings__label {
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 52%, transparent);
+}
+
+.seg-group {
+  display: inline-flex;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.seg-group button {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--color-text);
+  border-left: 1px solid var(--color-divider);
+}
+
+.seg-group button:first-child {
+  border-left: none;
+}
+
+.seg-group button.is-active {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.settings__toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
 }

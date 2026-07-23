@@ -23,8 +23,15 @@ export interface ToolDef {
   groups: HotkeyGroup[];
 }
 
+/** 'system' follows the OS light/dark preference. */
+export type ThemeMode = 'day' | 'night' | 'system';
+export type Palette = 'default' | 'catppuccin' | 'github';
+
 export interface PersistedState {
   enabled: string[];
   favGroups: Record<string, true>;
   favKeys: Record<string, true>;
+  showStars: boolean;
+  themeMode: ThemeMode;
+  palette: Palette;
 }
