@@ -34,4 +34,6 @@ export interface PersistedState {
   showStars: boolean;
   themeMode: ThemeMode;
   palette: Palette;
+  /** Multiplier applied to all text/icon sizes (1 = default). */
+  textScale: number;
 }

@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
+import { TEXT_SCALE_MAX, TEXT_SCALE_MIN, TEXT_SCALE_STEP } from '../hooks/useHotkeysState';
 import type { Palette, ThemeMode } from '../types';
 
 interface Props {
   themeMode: ThemeMode;
   palette: Palette;
   showStars: boolean;
+  textScale: number;
   onThemeModeChange: (mode: ThemeMode) => void;
   onPaletteChange: (palette: Palette) => void;
   onShowStarsChange: (show: boolean) => void;
+  onTextScaleChange: (scale: number) => void;
 }
 
 const MODES: { value: ThemeMode; label: string }[] = [
@@ -26,9 +29,11 @@ export function SettingsPanel({
   themeMode,
   palette,
   showStars,
+  textScale,
   onThemeModeChange,
   onPaletteChange,
   onShowStarsChange,
+  onTextScaleChange,
 }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -91,6 +96,27 @@ export function SettingsPanel({
                   {p.label}
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div className="settings__section">
+            <span className="settings__label">Text &amp; icon size</span>
+            <div className="stepper">
+              <button
+                aria-label="Decrease size"
+                disabled={textScale <= TEXT_SCALE_MIN}
+                onClick={() => onTextScaleChange(Math.round((textScale - TEXT_SCALE_STEP) * 100) / 100)}
+              >
+                –
+              </button>
+              <span className="stepper__value">{Math.round(textScale * 100)}%</span>
+              <button
+                aria-label="Increase size"
+                disabled={textScale >= TEXT_SCALE_MAX}
+                onClick={() => onTextScaleChange(Math.round((textScale + TEXT_SCALE_STEP) * 100) / 100)}
+              >
+                +
+              </button>
             </div>
           </div>
 

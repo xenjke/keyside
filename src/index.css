@@ -5,15 +5,12 @@
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --space-1: 5px;
-  --space-2: 10px;
-  --space-3: 15px;
-  --space-4: 20px;
-
   --radius-sm: 2px;
   --radius-md: 4px;
 
-  --key-col-width: 128px;
+  /* User-controlled text/icon size multiplier — set as an inline style on
+     .app from Settings, this default is only a fallback. */
+  --user-scale: 1;
 }
 
 /* — Palettes — each is a full set of color tokens for one palette × mode.
@@ -252,7 +249,7 @@ button {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   align-items: start;
   gap: 28px clamp(20px, 4vw, 36px);
   padding: 16px clamp(14px, 4vw, 30px) 24px;
@@ -283,6 +280,16 @@ button {
 }
 
 .tool-panel {
+  /* Scales its own text/spacing off its own width (cqw), not the viewport —
+     so a roomy pair on iPad or a cramped 4-up layout on a laptop both size
+     themselves off the space they actually have. This default (fixed, not
+     cqw-based) is what the single-tool multi-column layout uses: its columns
+     are a fixed target width (see --body--columns below) regardless of how
+     wide the overall panel/viewport is, so the key column has to match that
+     column's width, not the panel's. */
+  container: panel / inline-size;
+  --key-col-width: calc(122px * var(--user-scale));
+
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -316,29 +323,47 @@ button {
 }
 
 .tool-panel__head h2 {
-  font-size: 22px;
+  font-size: calc(clamp(22px, 17px + 1.4cqw, 32px) * var(--user-scale));
 }
 
 .tool-panel__kicker {
-  font-size: 11px;
+  font-size: calc(clamp(11px, 9.5px + 0.5cqw, 14px) * var(--user-scale));
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--color-text) 48%, transparent);
 }
 
 .tool-panel__body--stacked {
+  /* Here the panel *is* the one column (multiple tools side by side, one per
+     grid track), so its own cqw genuinely reflects the space available —
+     tuned so a cramped 4-tool panel stays compact and a roomy 2-tool one
+     gets noticeably bigger. */
+  --key-col-width: calc(clamp(105px, 30px + 26cqw, 215px) * var(--user-scale));
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: calc(clamp(10px, 8px + 1cqw, 18px) * var(--user-scale));
 }
 
 .tool-panel__body--columns {
-  column-width: 240px;
+  /* A fixed target column width, not cqw-based — the panel can be the whole
+     viewport wide here (single tool active), which has nothing to do with
+     how wide each text column should be. Widened over the CSS default so
+     it settles on fewer, roomier columns instead of many cramped ones. */
+  column-width: 340px;
   column-gap: 32px;
 }
 
+/* More room becomes available (wider window, or fewer/no other tools) —
+   let the single-tool layout spread out a bit further too. */
+@container panel (min-width: 900px) {
+  .tool-panel__body--columns {
+    column-width: 400px;
+    column-gap: 40px;
+  }
+}
+
 .key-group {
-  margin-bottom: 9px;
+  margin-bottom: calc(clamp(9px, 7px + 1cqw, 18px) * var(--user-scale));
   break-inside: avoid;
   -webkit-column-break-inside: avoid;
 }
@@ -346,6 +371,10 @@ button {
 .tool-panel__body--columns .key-group {
   display: inline-block;
   width: 100%;
+  /* Tighter than the cqw-scaled default above — that default reads this
+     panel's full width, which for the single-tool layout has nothing to do
+     with a text column's actual (much narrower) height budget. */
+  margin-bottom: calc(9px * var(--user-scale));
 }
 
 .key-group__head {
@@ -356,7 +385,7 @@ button {
 }
 
 .key-group__name {
-  font-size: 10.5px;
+  font-size: calc(clamp(10.5px, 9px + 0.45cqw, 13px) * var(--user-scale));
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--color-text) 52%, transparent);
@@ -375,21 +404,27 @@ button {
   padding: 4px;
   margin: -4px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: calc(clamp(12px, 10px + 0.6cqw, 16px) * var(--user-scale));
   line-height: 1;
   color: color-mix(in srgb, var(--color-text) 25%, transparent);
 }
 
 .star-btn--sm {
-  font-size: 11px;
+  font-size: calc(clamp(11px, 9.5px + 0.55cqw, 15px) * var(--user-scale));
 }
 
 .key-row {
   display: grid;
   grid-template-columns: var(--key-col-width) 1fr;
-  gap: 12px;
+  gap: calc(clamp(12px, 10px + 0.6cqw, 20px) * var(--user-scale));
   align-items: baseline;
-  padding: 3px 0;
+  padding: calc(clamp(3px, 2px + 0.3cqw, 7px) * var(--user-scale)) 0;
+}
+
+.tool-panel__body--columns .key-row {
+  /* Same reasoning as .key-group above — don't inherit spacing sized for
+     this panel's full width when the actual column is much narrower. */
+  padding: calc(2px * var(--user-scale)) 0;
 }
 
 .key-row__combo {
@@ -407,7 +442,7 @@ button {
 
 .key-combo__sep {
   color: color-mix(in srgb, var(--color-text) 38%, transparent);
-  font-size: 11px;
+  font-size: calc(clamp(11px, 9.5px + 0.5cqw, 14px) * var(--user-scale));
   margin: 0 4px;
 }
 
@@ -417,7 +452,9 @@ button {
   color: var(--color-accent-800);
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 12.5px;
+  /* Tuned for --body--stacked (multi-tool); --body--columns overrides below
+     with fixed sizes, since its column width doesn't track this panel's cqw. */
+  font-size: calc(clamp(12.5px, 6.5px + 1.7cqw, 18px) * var(--user-scale));
   line-height: 1;
   padding: 3px 6px;
   border-radius: 2px;
@@ -428,14 +465,48 @@ button {
 .key-cap--mono {
   font-family: var(--font-mono);
   font-weight: 500;
-  font-size: 11px;
+  font-size: calc(clamp(11px, 5.5px + 1.5cqw, 16px) * var(--user-scale));
 }
 
 .key-row__desc {
-  font-size: 13px;
+  font-size: calc(clamp(13px, 7px + 1.9cqw, 20px) * var(--user-scale));
   line-height: 1.3;
   color: var(--color-text);
   text-wrap: pretty;
+}
+
+.tool-panel__body--columns .key-cap {
+  font-size: calc(13.5px * var(--user-scale));
+}
+
+.tool-panel__body--columns .key-cap--mono {
+  font-size: calc(12px * var(--user-scale));
+}
+
+.tool-panel__body--columns .key-row__desc {
+  font-size: calc(14px * var(--user-scale));
+}
+
+/* Even more room (wide laptop window, single tool active) — nudge the
+   single-tool layout's text up too, on top of the wider columns above. */
+@container panel (min-width: 1400px) {
+  .tool-panel__body--columns {
+    column-width: 460px;
+    column-gap: 48px;
+    --key-col-width: calc(138px * var(--user-scale));
+  }
+
+  .tool-panel__body--columns .key-cap {
+    font-size: calc(15px * var(--user-scale));
+  }
+
+  .tool-panel__body--columns .key-cap--mono {
+    font-size: calc(13px * var(--user-scale));
+  }
+
+  .tool-panel__body--columns .key-row__desc {
+    font-size: calc(15.5px * var(--user-scale));
+  }
 }
 
 /* Magenta-accented tools recolor their key caps. */
@@ -444,22 +515,25 @@ button {
   color: var(--color-accent-2-800);
 }
 
-/* Roomier layout once there's space for it (iPad landscape and up). */
-@media (min-width: 900px) {
-  .key-row {
-    padding: 1px 0;
-  }
-}
-
-/* Below this, drop the fixed key column so long combos don't get crushed. */
-@media (max-width: 480px) {
-  :root {
+/* Below this panel width, drop the fixed key column so long combos don't get
+   crushed — a container query, not a viewport one, since a panel this narrow
+   can happen on a wide screen too (e.g. four tools enabled at once). 450px
+   (not 480px, the old viewport-based rule's threshold) because this is
+   measured against the panel's own width, which is narrower than the
+   viewport by its padding — 450px here covers at least as much as the old
+   480px viewport rule did. */
+@container panel (max-width: 450px) {
+  .tool-panel,
+  .tool-panel__body--stacked {
+    /* Both selectors: .tool-panel__body--stacked sets its own --key-col-width
+       unconditionally (see that rule above), which would otherwise shadow
+       this reset for multi-tool panels. */
     --key-col-width: max-content;
   }
 
   .key-row {
     grid-template-columns: 1fr;
-    gap: 2px;
+    gap: calc(2px * var(--user-scale));
   }
 
   .tool-panel__body--columns {
@@ -483,7 +557,7 @@ button {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 15px;
+  font-size: calc(15px * var(--user-scale));
   color: color-mix(in srgb, var(--color-text) 40%, transparent);
   opacity: 0.55;
 }
@@ -556,4 +630,38 @@ button {
   gap: 8px;
   font-size: 13px;
   cursor: pointer;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stepper button {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-divider);
+  background: none;
+  color: var(--color-text);
+  font-size: calc(15px * var(--user-scale));
+  line-height: 1;
+  cursor: pointer;
+}
+
+.stepper button:hover {
+  background: color-mix(in srgb, var(--color-text) 7%, transparent);
+}
+
+.stepper button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.stepper__value {
+  flex: 1;
+  text-align: center;
+  font-size: calc(13px * var(--user-scale));
+  color: color-mix(in srgb, var(--color-text) 65%, transparent);
 }

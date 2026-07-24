@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type CSSProperties } from 'react';
 import { TOOLS } from './data/hotkeys';
 import { useHotkeysState } from './hooks/useHotkeysState';
 import { useTheme } from './hooks/useTheme';
@@ -13,8 +13,16 @@ const IS_DEMO = import.meta.env.VITE_IS_DEMO === 'true';
 const REPO_URL = import.meta.env.VITE_REPO_URL as string | undefined;
 
 export function App() {
-  const { state, toggleTool, toggleFavGroup, toggleFavKey, setShowStars, setThemeMode, setPalette } =
-    useHotkeysState();
+  const {
+    state,
+    toggleTool,
+    toggleFavGroup,
+    toggleFavKey,
+    setShowStars,
+    setThemeMode,
+    setPalette,
+    setTextScale,
+  } = useHotkeysState();
   useTheme(state.themeMode, state.palette);
 
   const activeTools = useMemo(
@@ -31,7 +39,7 @@ export function App() {
   );
 
   return (
-    <div className="app">
+    <div className="app" style={{ '--user-scale': state.textScale } as CSSProperties}>
       {IS_DEMO && (
         <div className="demo-banner">
           Demo of {REPO_URL ? <a href={REPO_URL}>Keyside</a> : 'Keyside'} — this reflects one person's own
@@ -47,9 +55,11 @@ export function App() {
             themeMode={state.themeMode}
             palette={state.palette}
             showStars={state.showStars}
+            textScale={state.textScale}
             onThemeModeChange={setThemeMode}
             onPaletteChange={setPalette}
             onShowStarsChange={setShowStars}
+            onTextScaleChange={setTextScale}
           />
         </div>
       </header>
