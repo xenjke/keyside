@@ -1,10 +1,13 @@
 # Hotkeys
 
+![Screenshot](docs/screenshot.png)
+
 A personal hotkeys reference — toggle the tools you're using and it shows their
 key bindings; with two or more tools on screen it ranks by star and trims to
 fit so everything stays visible at once. Star sections/keys to bump them up
-the ranking. State (which tools are enabled, what's starred) persists in
-`localStorage`.
+the ranking. The gear icon opens day/night + palette (Default, Catppuccin,
+GitHub) settings and a switch to hide the star buttons once you're happy with
+the ranking. State (enabled tools, stars, theme) persists in `localStorage`.
 
 Built as a small React + TypeScript app so the hotkey data is a plain typed
 dictionary — easy to edit, and to grow beyond a fixed layout later.
