@@ -34,7 +34,7 @@ npm run preview # serve the production build locally
 `.github/workflows/deploy.yml` builds and publishes `main` on every push
 (Actions → Pages, no branch or extra config to maintain). One-time setup:
 repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-After that it's live at `https://xenjke.github.io/keyside/`.
+After that it's live at `https://<owner>.github.io/<repo>/`.
 
 Every build's JS/CSS files are content-hashed, so a change always ships
 under a new filename — no stale-bundle risk. `index.html` itself is cached
