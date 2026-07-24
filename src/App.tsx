@@ -7,6 +7,11 @@ import { ToolTabs } from './components/ToolTabs';
 import { ToolPanel } from './components/ToolPanel';
 import { SettingsPanel } from './components/SettingsPanel';
 
+// Set at build time — e.g. `VITE_IS_DEMO=true VITE_REPO_URL=... npm run build`
+// — nothing about the deploy target is hardcoded or inferred here.
+const IS_DEMO = import.meta.env.VITE_IS_DEMO === 'true';
+const REPO_URL = import.meta.env.VITE_REPO_URL as string | undefined;
+
 export function App() {
   const { state, toggleTool, toggleFavGroup, toggleFavKey, setShowStars, setThemeMode, setPalette } =
     useHotkeysState();
@@ -27,8 +32,15 @@ export function App() {
 
   return (
     <div className="app">
+      {IS_DEMO && (
+        <div className="demo-banner">
+          Demo of {REPO_URL ? <a href={REPO_URL}>Keyside</a> : 'Keyside'} — this reflects one person's own
+          setup, not a shared config. Fork it and run <code>npm install &amp;&amp; npm run dev</code> locally
+          to make your own.
+        </div>
+      )}
       <header className="app-header">
-        <span className="app-title">Hotkeys</span>
+        <span className="app-title">Keyside</span>
         <div className="app-header__row">
           <ToolTabs tools={TOOLS} enabled={state.enabled} onToggle={toggleTool} />
           <SettingsPanel

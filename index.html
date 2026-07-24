@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Hotkeys</title>
+    <title>Keyside</title>
     <script>
       // Sets the theme before first paint, so there's no flash of the wrong
       // mode. Storage key/shape must match src/hooks/useHotkeysState.ts.
       (function () {
         try {
-          var raw = localStorage.getItem('hotkeys-view_state_v1');
+          var raw = localStorage.getItem('keyside_state_v1');
           var s = raw ? JSON.parse(raw) : {};
           var mode = s.themeMode || 'system';
           var palette = s.palette || 'default';

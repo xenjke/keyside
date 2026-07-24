@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Palette, PersistedState, ThemeMode } from '../types';
 
 // Also hard-coded in index.html's pre-paint theme script — keep the two in sync.
-export const STORAGE_KEY = 'hotkeys-view_state_v1';
+export const STORAGE_KEY = 'keyside_state_v1';
 
 const DEFAULT_STATE: PersistedState = {
   enabled: ['nvim'],
