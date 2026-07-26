@@ -94,6 +94,22 @@ test('star controls have touch-friendly boxes and change ranking', async ({ page
   await expect(neovim.locator('.key-group').first().locator('.key-row').first()).toContainText('Center current line');
 });
 
+test('three-tool desktop layout keeps every shortcut entry on one line', async ({ page }) => {
+  await loadClean(page, { width: 1280, height: 900 });
+  await page.getByRole('button', { name: /^Ghostty \d+$/ }).click();
+  await page.getByRole('button', { name: /^Git \d+$/ }).click();
+  const rowMeasurements = await page.locator('.key-row').evaluateAll((rows) => rows.map((row) => {
+    const combo = row.querySelector('.key-row__combo')!.getBoundingClientRect();
+    const description = row.querySelector('.key-row__desc')!.getBoundingClientRect();
+    return {
+      gridColumns: getComputedStyle(row).gridTemplateColumns,
+      topDifference: Math.abs(combo.top - description.top),
+    };
+  }));
+  expect(rowMeasurements.length).toBeGreaterThan(0);
+  expect(rowMeasurements.every(({ gridColumns, topDifference }) => gridColumns.split(' ').length >= 2 && topDifference <= 12)).toBe(true);
+});
+
 test('responsive layouts and maximum text scale keep content within the viewport', async ({ page }) => {
   for (const width of [320, 390, 768, 820, 1024]) {
     await loadClean(page, { width, height: 900 });

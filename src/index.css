@@ -490,13 +490,13 @@ input:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .key-combo {
   display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .key-combo__sep {
@@ -574,13 +574,9 @@ input:focus-visible {
   color: var(--color-accent-2-800);
 }
 
-/* Below this panel width, drop the fixed key column so long combos don't get
-   crushed — a container query, not a viewport one, since a panel this narrow
-   can happen on a wide screen too (e.g. four tools enabled at once). 450px
-   (not 480px, the old viewport-based rule's threshold) because this is
-   measured against the panel's own width, which is narrower than the
-   viewport by its padding — 450px here covers at least as much as the old
-   480px viewport rule did. */
+/* Narrow panels still keep each shortcut and its description on one row when
+   there is room. The key column is content-sized so multi-part shortcuts do
+   not force an unnecessary line break before the description. */
 @container panel (max-width: 450px) {
   .tool-panel,
   .tool-panel__body--stacked {
@@ -591,7 +587,7 @@ input:focus-visible {
   }
 
   .key-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: max-content minmax(0, 1fr);
     gap: calc(2px * var(--user-scale));
   }
 
