@@ -18,6 +18,8 @@ export interface ToolDef {
   name: string;
   /** Short label under the tool name, e.g. "default keymap". */
   kicker: string;
+  /** Visible provenance/version caveat for bindings that can change over time. */
+  sourceNote: string;
   /** Which accent color this tool's key caps use. */
   accent: 'cyan' | 'magenta';
   groups: HotkeyGroup[];

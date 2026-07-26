@@ -27,6 +27,7 @@ desktop) — the layout collapses to fewer columns as the viewport narrows.
 ```sh
 npm run build   # type-checks, then outputs static files to dist/
 npm run preview # serve the production build locally
+npm test        # production-preview UI, responsive, data, and accessibility checks
 ```
 
 ## Deploying to GitHub Pages
@@ -52,6 +53,7 @@ entry:
   id: 'my-tool',
   name: 'My Tool',
   kicker: 'short subtitle',
+  sourceNote: 'Where these bindings came from and any version caveat',
   accent: 'cyan', // or 'magenta'
   groups: [
     { name: 'Group name', keys: [
