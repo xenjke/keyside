@@ -1,4 +1,4 @@
-import { useMemo, type CSSProperties } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 import { TOOLS } from './data/hotkeys';
 import { useHotkeysState } from './hooks/useHotkeysState';
 import { useTheme } from './hooks/useTheme';
@@ -13,6 +13,7 @@ const IS_DEMO = import.meta.env.VITE_IS_DEMO === 'true';
 const REPO_URL = import.meta.env.VITE_REPO_URL as string | undefined;
 
 export function App() {
+  const [expandedTools, setExpandedTools] = useState<Set<string>>(() => new Set());
   const {
     state,
     toggleTool,
@@ -34,9 +35,24 @@ export function App() {
   const budget = budgetFor(n);
 
   const views = useMemo(
-    () => activeTools.map((t) => buildToolView(t, state.favGroups, state.favKeys, limited, budget)),
-    [activeTools, state.favGroups, state.favKeys, limited, budget],
+    () => activeTools.map((t) => buildToolView(
+      t,
+      state.favGroups,
+      state.favKeys,
+      limited && !expandedTools.has(t.id),
+      budget,
+    )),
+    [activeTools, state.favGroups, state.favKeys, limited, budget, expandedTools],
   );
+
+  function toggleExpanded(toolId: string) {
+    setExpandedTools((current) => {
+      const next = new Set(current);
+      if (next.has(toolId)) next.delete(toolId);
+      else next.add(toolId);
+      return next;
+    });
+  }
 
   return (
     <div className="app" style={{ '--user-scale': state.textScale } as CSSProperties}>
@@ -48,7 +64,7 @@ export function App() {
         </div>
       )}
       <header className="app-header">
-        <span className="app-title">Keyside</span>
+        <h1 className="app-title">Keyside</h1>
         <div className="app-header__row">
           <ToolTabs tools={TOOLS} enabled={state.enabled} onToggle={toggleTool} />
           <SettingsPanel
@@ -78,7 +94,9 @@ export function App() {
               key={view.tool.id}
               view={view}
               limited={limited}
+              expanded={expandedTools.has(view.tool.id)}
               showStars={state.showStars}
+              onToggleExpanded={() => toggleExpanded(view.tool.id)}
               onFavGroup={toggleFavGroup}
               onFavKey={toggleFavKey}
             />

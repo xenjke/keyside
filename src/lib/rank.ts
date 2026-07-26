@@ -15,6 +15,8 @@ export interface RankedGroup {
 export interface ToolView {
   tool: ToolDef;
   groups: RankedGroup[];
+  totalKeys: number;
+  totalGroups: number;
 }
 
 /** How many keys to show per tool once two or more tools are on screen at once. */
@@ -36,6 +38,8 @@ export function buildToolView(
   limited: boolean,
   budget: number,
 ): ToolView {
+  const totalKeys = tool.groups.reduce((sum, group) => sum + group.keys.length, 0);
+  const totalGroups = tool.groups.length;
   let groups: RankedGroup[] = tool.groups.map((g, gi) => {
     const gid = `${tool.id}|${gi}`;
     const keys: RankedKey[] = g.keys.map((k, ki) => {
@@ -62,5 +66,5 @@ export function buildToolView(
     groups = out;
   }
 
-  return { tool, groups };
+  return { tool, groups, totalKeys, totalGroups };
 }

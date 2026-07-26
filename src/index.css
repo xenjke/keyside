@@ -132,6 +132,12 @@ button {
   font-family: inherit;
 }
 
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .app {
   min-height: 100%;
   display: flex;
@@ -169,10 +175,11 @@ button {
 
 .app-title {
   display: block;
+  margin: 0;
   font-size: 13px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-text) 42%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
 }
 
 .app-header__row {
@@ -207,7 +214,7 @@ button {
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 16px;
-  color: color-mix(in srgb, var(--color-text) 42%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
 }
 
 .tool-tab.is-on {
@@ -242,14 +249,14 @@ button {
 .tool-tab__count {
   font-size: 11px;
   font-family: var(--font-body);
-  color: color-mix(in srgb, var(--color-text) 42%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
 }
 
 .app-main {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   align-items: start;
   gap: 28px clamp(20px, 4vw, 36px);
   padding: 16px clamp(14px, 4vw, 30px) 24px;
@@ -265,7 +272,7 @@ button {
   min-height: 40vh;
   gap: 8px;
   text-align: center;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
 }
 
 .empty-state__title {
@@ -301,7 +308,7 @@ button {
   display: flex;
   align-items: baseline;
   gap: 10px;
-  margin: 0 0 12px;
+  margin: 0 0 6px;
   padding-bottom: 6px;
   border-bottom: 2px solid var(--color-accent);
 }
@@ -330,7 +337,48 @@ button {
   font-size: calc(clamp(11px, 9.5px + 0.5cqw, 14px) * var(--user-scale));
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-text) 48%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
+}
+
+.tool-panel__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 12px;
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
+  font-size: calc(clamp(10.5px, 9px + 0.4cqw, 12px) * var(--user-scale));
+  line-height: 1.35;
+}
+
+.tool-panel__source {
+  max-width: 52em;
+}
+
+.tool-panel__coverage {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 4px;
+}
+
+.tool-panel__coverage strong {
+  color: var(--color-text);
+}
+
+.text-action {
+  min-height: 32px;
+  margin: -7px -8px -7px 4px;
+  padding: 6px 8px;
+  border: 0;
+  background: none;
+  color: var(--color-accent-800);
+  font-size: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
 }
 
 .tool-panel__body--stacked {
@@ -388,7 +436,7 @@ button {
   font-size: calc(clamp(10.5px, 9px + 0.45cqw, 13px) * var(--user-scale));
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-text) 52%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
   white-space: nowrap;
 }
 
@@ -399,14 +447,25 @@ button {
 }
 
 .star-btn {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
   background: none;
   border: none;
-  padding: 4px;
-  margin: -4px;
+  padding: 0;
+  margin: -10px -8px;
+  border-radius: 50%;
   cursor: pointer;
   font-size: calc(clamp(12px, 10px + 0.6cqw, 16px) * var(--user-scale));
   line-height: 1;
-  color: color-mix(in srgb, var(--color-text) 25%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
+}
+
+.star-btn:hover {
+  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+  color: var(--color-text);
 }
 
 .star-btn--sm {
@@ -441,7 +500,7 @@ button {
 }
 
 .key-combo__sep {
-  color: color-mix(in srgb, var(--color-text) 38%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
   font-size: calc(clamp(11px, 9.5px + 0.5cqw, 14px) * var(--user-scale));
   margin: 0 4px;
 }
@@ -551,15 +610,14 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: none;
   border: none;
   cursor: pointer;
   font-size: calc(15px * var(--user-scale));
-  color: color-mix(in srgb, var(--color-text) 40%, transparent);
-  opacity: 0.55;
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
 }
 
 .settings__trigger:hover,
@@ -573,7 +631,7 @@ button {
   top: calc(100% + 8px);
   right: 0;
   z-index: 10;
-  width: 220px;
+  width: 260px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -582,6 +640,8 @@ button {
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-md);
   box-shadow: 0 8px 24px color-mix(in srgb, var(--color-text) 20%, transparent);
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
 }
 
 .settings__section {
@@ -594,7 +654,7 @@ button {
   font-size: 10.5px;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-text) 52%, transparent);
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
 }
 
 .seg-group {
@@ -620,7 +680,7 @@ button {
 }
 
 .seg-group button.is-active {
-  background: var(--color-accent);
+  background: var(--color-accent-800);
   color: var(--color-bg);
 }
 
@@ -664,4 +724,28 @@ button {
   text-align: center;
   font-size: calc(13px * var(--user-scale));
   color: color-mix(in srgb, var(--color-text) 65%, transparent);
+}
+
+@media (pointer: coarse) {
+  .star-btn {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+    margin-block: -14px;
+  }
+}
+
+/* A wrapped header can move the gear to either edge. On phone-sized screens,
+   use a viewport-anchored bottom sheet so every control remains touchable. */
+@media (max-width: 600px) {
+  .settings__panel {
+    position: fixed;
+    inset-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
+    top: auto;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: auto;
+    max-height: calc(100dvh - 24px - env(safe-area-inset-bottom));
+    padding: 18px;
+    border-radius: 10px;
+  }
 }

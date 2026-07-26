@@ -9,6 +9,7 @@ export const TOOLS: ToolDef[] = [
     id: 'nvim',
     name: 'Neovim',
     kicker: 'default keymap',
+    sourceNote: 'Neovim defaults · check :help index for your version',
     accent: 'cyan',
     groups: [
       {
@@ -118,6 +119,7 @@ export const TOOLS: ToolDef[] = [
     id: 'ghostty',
     name: 'Ghostty',
     kicker: 'macOS defaults',
+    sourceNote: 'Ghostty macOS defaults · check your installed version',
     accent: 'cyan',
     groups: [
       {
@@ -171,6 +173,7 @@ export const TOOLS: ToolDef[] = [
     id: 'git',
     name: 'Git',
     kicker: 'common commands',
+    sourceNote: 'Common Git CLI commands · behavior can vary by version and config',
     accent: 'magenta',
     groups: [
       {
@@ -236,6 +239,7 @@ export const TOOLS: ToolDef[] = [
     id: 'herdr',
     name: 'Herdr',
     kicker: 'prefix ⌃B',
+    sourceNote: 'Project-specific Herdr/tmux bindings · prefix and config may differ',
     accent: 'magenta',
     groups: [
       {
