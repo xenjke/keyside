@@ -578,17 +578,18 @@ input:focus-visible {
    there is room. The key column is content-sized so multi-part shortcuts do
    not force an unnecessary line break before the description. */
 @container panel (max-width: 450px) {
-  .tool-panel,
+  .tool-panel__body--columns,
   .tool-panel__body--stacked {
-    /* Both selectors: .tool-panel__body--stacked sets its own --key-col-width
-       unconditionally (see that rule above), which would otherwise shadow
-       this reset for multi-tool panels. */
-    --key-col-width: max-content;
+    /* Keep one shared key column on phones so descriptions begin on the same
+       vertical line. A per-row max-content track made every description shift
+       with the width of its own shortcut. The width scales with the user's
+       text/icon size and leaves enough room for the longest compact combos. */
+    --key-col-width: calc(86px * var(--user-scale));
   }
 
   .key-row {
-    grid-template-columns: max-content minmax(0, 1fr);
-    gap: calc(2px * var(--user-scale));
+    grid-template-columns: var(--key-col-width) minmax(0, 1fr);
+    gap: calc(8px * var(--user-scale));
   }
 
   .tool-panel__body--columns {

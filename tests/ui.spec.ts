@@ -110,6 +110,45 @@ test('three-tool desktop layout keeps every shortcut entry on one line', async (
   expect(rowMeasurements.every(({ gridColumns, topDifference }) => gridColumns.split(' ').length >= 2 && topDifference <= 12)).toBe(true);
 });
 
+test('shortcut descriptions share a column on mobile as well as desktop', async ({ page }) => {
+  for (const viewport of [
+    { width: 390, height: 844, compact: false },
+    { width: 390, height: 844, compact: true },
+    { width: 1280, height: 900, compact: false },
+  ]) {
+    await loadClean(page, viewport);
+    if (viewport.compact) {
+      await page.getByRole('button', { name: /^Ghostty \d+$/ }).click();
+      await page.getByRole('button', { name: /^Git \d+$/ }).click();
+    }
+
+    const groupMeasurements = await page.locator('.key-group').evaluateAll((groups) => groups.map((group) => {
+      const rows = [...group.querySelectorAll('.key-row')];
+      const measurements = rows.map((row) => {
+        const combo = row.querySelector('.key-row__combo')!.getBoundingClientRect();
+        const description = row.querySelector('.key-row__desc')!.getBoundingClientRect();
+        return {
+          gridColumns: getComputedStyle(row).gridTemplateColumns,
+          descriptionLeft: description.left,
+          topDifference: Math.abs(combo.top - description.top),
+        };
+      });
+      return {
+        measurements,
+        descriptionStarts: measurements.map(({ descriptionLeft }) => descriptionLeft),
+      };
+    }));
+    expect(groupMeasurements.length).toBeGreaterThan(0);
+    for (const { measurements, descriptionStarts } of groupMeasurements) {
+      expect(measurements.length).toBeGreaterThan(0);
+      expect(measurements.every(({ gridColumns, topDifference }) => gridColumns.split(' ').length >= 2 && topDifference <= 12)).toBe(true);
+      if (descriptionStarts.length > 1) {
+        expect(Math.max(...descriptionStarts) - Math.min(...descriptionStarts)).toBeLessThanOrEqual(0.5);
+      }
+    }
+  }
+});
+
 test('responsive layouts and maximum text scale keep content within the viewport', async ({ page }) => {
   for (const width of [320, 390, 768, 820, 1024]) {
     await loadClean(page, { width, height: 900 });
