@@ -4,8 +4,9 @@ import { TOOLS } from '../src/data/hotkeys';
 const EXPECTED_COUNTS: Record<string, number> = {
   nvim: 61,
   ghostty: 20,
-  git: 27,
+  git: 35,
   herdr: 28,
+  helix: 77,
 };
 
 test('hotkey dictionary has valid, unique identifiers and complete entries', () => {
