@@ -6,7 +6,7 @@ const EXPECTED_COUNTS: Record<string, number> = {
   ghostty: 20,
   git: 35,
   herdr: 28,
-  helix: 77,
+  helix: 91,
 };
 
 test('hotkey dictionary has valid, unique identifiers and complete entries', () => {
